@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: mvn package
+      - run: mvn package -DskipTests
 
   unit-test:
     needs: build
