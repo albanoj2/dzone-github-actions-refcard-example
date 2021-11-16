@@ -2,12 +2,21 @@ name: dzone-github-actions-example
 
 on: [push]
 
+env:
+  GROUP: Test
+  SERVICE_NAME: Example-Github-Actions-Service
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: mvn package -DskipTests
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: jar-file
+          path: target/github-actions-example-1.0.0.jar
 
   unit-test:
     needs: build
@@ -15,3 +24,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mvn test
+
+  deploy:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Install Spring Cloud Extension
+      run: az extension add --name spring-cloud
+    - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with: jar-file
+    name: my-artifact
+    - name: Deploy with AZ CLI commands
+      run: |
+        az config set defaults.group=$GROUP
+        az config set defaults.spring-cloud=$SERVICE_NAME
+        az spring-cloud app deploy -n gateway --jar-path target/github-actions-example-1.0.0.jar
