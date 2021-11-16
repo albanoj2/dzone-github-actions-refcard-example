@@ -35,10 +35,10 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Install Spring Cloud Extension
       run: az extension add --name spring-cloud
-    - name: Download a single artifact
-        uses: actions/download-artifact@v2
-        with: jar-file
-    name: my-artifact
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: jar-file
     - name: Deploy with AZ CLI commands
       run: |
         az config set defaults.group=$GROUP
