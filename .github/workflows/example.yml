@@ -30,6 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Download JAR file
+      uses: actions/download-artifact@v2
+      with:
+        name: jar-file
     - name: Login to Azure
       uses: azure/login@v1
       with:
