@@ -1,9 +1,7 @@
-FROM java:11
+FROM openjdk:11
 
-WORKDIR /example
-
-COPY . .
+COPY target/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "github-actions-example-1.0.0.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
